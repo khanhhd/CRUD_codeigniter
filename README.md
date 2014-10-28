@@ -37,15 +37,16 @@ Tóm lại ta cần copy thử mục application, system và file index.php và 
 + Kết nối CSDL ta sử dụng `$this->load->database();`
 + Thực thi câu truy vấn `$this->load->query("câu truy vấn");`
 
-#####*ActiveRecord trong CI
+######*ActiveRecord trong CI
 - Cho phép lấy dữ liệu, cập nhât dữ liệu một cách ngắn gọn 
 + Lấy toàn bộ dữ liệu của bảng: `$this->db->get("tên bảng")
 + Thực thi câu lệnh select: `$this->db->select('name, age, address');`
 + Truy vấn kết hợp với điều kiên: `$this->db->where();`
 Và rất nhiều câu lệnh khác có thể tham khảo trong user_guide của CI [ActivRecord CI ](https://ellislab.com/codeigniter/user-guide/database/active_record.html)
+
 #Xây dựng ứng dụng đầu tiên:
 
-Đối với controller: Được viết dưới dạng classs và extend từ CI_Controller
+######Đối với controller: 
 
 ```
 <?php
@@ -62,6 +63,7 @@ class Users extends CI_Controller{
     }
 }
 ```
+- Được viết dưới dạng classs và extend từ CI_Controller
 - Chú ý đến phương thức khởi tạo của controller đây là nơi để khởi tạo các giá trị default
 - Ở đây tôi có action index của controller users dùng để lấy ra một danh sách các users
 - Thay vì khởi tạo object user như thông thường là `User.new` thì CI sử dụng `$this->load->model("Muser");`

@@ -16,6 +16,7 @@
 */
 $config['base_url']	= 'http://127.0.0.1/CRUD_codeigniter';
 
+
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -224,7 +225,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = 'long_key';
 
 /*
 |--------------------------------------------------------------------------

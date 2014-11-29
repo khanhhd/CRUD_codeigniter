@@ -6,6 +6,7 @@ class Users extends CI_Controller{
       $this->load->helper("url");
       $this->load->model("Muser");
       $this->load->helper('form');
+      $this->load->database();
     }
 
     public function index(){
@@ -42,9 +43,12 @@ class Users extends CI_Controller{
     public function create()
     {
       $data = $this->input->post();
+      $data['password']=MD5($data['password']);
       $this->db->insert('users', $data);
-      $this->index();
-    }
+      $session_data = $this->session->userdata('logged_in');
+     $data['name'] = $session_data['name'];
+     $this->load->view('home_index', $data);
+   }
 
     public function update()
     {
@@ -56,7 +60,7 @@ class Users extends CI_Controller{
     }
 
     public function show_user($id)
-    { 
+    {
       $data['user'] = $this->db->where("id", $id);
       $query = $this->db->get("users");
       $data['user'] = $query->result();

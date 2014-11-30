@@ -123,7 +123,9 @@ ví dụ để lấy sesion_id `$session_id = $this->session->userdata('session_
 ###### Session trong ứng dụng
 
 - config `autoload.php`
+
  `$autoload['libraries'] = array('database','session')`
+
 - Trong ứng dụng việc valid dữ liệu và gán session  bằng hàm sau
 ```
 function check_database($password)

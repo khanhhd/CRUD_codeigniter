@@ -120,3 +120,35 @@ ví dụ để lấy sesion_id `$session_id = $this->session->userdata('session_
 
 `$this->session->unset_userdata('some_name');`
 
+###### Session trong ứng dụng
+
+- config `autoload.php`
+ `$autoload['libraries'] = array('database','session')`
+- Trong ứng dụng việc valid dữ liệu và gán session  bằng hàm sau
+```
+function check_database($password)
+ {
+   $name = $this->input->post('name');
+   $result = $this->Muser->login($name, $password);
+   if($result)
+   {
+	 $sess_array = array();
+	 foreach($result as $row)
+	 {
+	   $sess_array = array(
+		 'id' => $row->id,
+		 'name' => $row->name
+		 );
+	   $this->session->set_userdata('logged_in', $sess_array);
+	 }
+	 return TRUE;
+   }
+   else
+   {
+	 $this->form_validation->set_message('check_database', 'Invalid name or password');
+	 return false;
+   }
+ }
+}
+
+```

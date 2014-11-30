@@ -139,7 +139,7 @@ function check_database($password)
 	 {
 	   $sess_array = array(
 		 'id' => $row->id,
-		 'name' => $row->name
+		 'name' => $row->nameli
 		 );
 	   $this->session->set_userdata('logged_in', $sess_array);
 	 }
@@ -154,3 +154,6 @@ function check_database($password)
 }
 
 ```
+
+Ngoài ra còn các Libraries cho việc chứng thực như 
+[ion_auth](http://benedmunds.com/ion_auth/)

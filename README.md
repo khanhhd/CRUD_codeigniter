@@ -93,3 +93,30 @@ class Muser extends CI_Model{
 ```
 - Chú ý tên model không được trùng với tên của controller 
 - Mọi model phải được kế thừa từ CI_Model, trong ứng dụng này việc kết nối CSDL sử dụng luôn trong phương thức khởi tạo của model ` $this->load->database();`
+
+## Session trong CI
+
+###### Sesion làm việc như thế nào?
+
+Khi một trang được load, sesion sẽ kiểm tra xem session data có tồn tại trong cookie của user session hay không. Nếu không tồn tại session data thì sẽ tạo một sesion mới và  lưu vào trong cookie. Nếu session đã tồn tại thì thông tin sẽ được update và đồng thời update vào cookie, với mỗi lần update sẽ tạo ra một session_id. Session class chạy một cách tự động, khi làm việc với session data hoặc thậm chí thêm chính data của bạn vào sesion user thì quá trình đọc, ghi và cập nhật session là tự động. 
+
+###### Sesion Data là gì ?
+
+Trong CI nó đơn giản chỉ là một mảng chứa các thông tin như: Session ID, IP, User Agent và Last activity (timestamp)
+Nếu option `$config['encryption_key']`  này được enable trong config thì mảng seesion data sẽ đưuọc mã hóa trước khi lưu vào cookie, làm tăng tính bảo mật cho dữ liệu.
+
+######* Lấy dữ liệu trong session data 
+
+ví dụ để lấy sesion_id `$session_id = $this->session->userdata('session_id');`
+
+######*Thêm dữ liệu vào trong session data:
+
+`$this->session->set_userdata('some_name', 'some_value');`
+
+######* Lấy tất cả data trong session data
+`$this->session->all_userdata()`
+
+######* Xóa session 
+
+`$this->session->unset_userdata('some_name');`
+

@@ -25,7 +25,7 @@
     <link rel="apple-touch-icon-precomposed" href="<?php echo base_url();?>img/apple-touch-icon-57-precomposed.png">
     <link rel="shortcut icon" href="<?php echo base_url();?>img/favicon.png">
 
-    <script type="text/javascript" src="<?php echo base_url();?>js/jquery.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url();?>js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url();?>js/scripts.js"></script>
+    <script src="<?php echo base_url();?>js/jquery.min.js"></script>
+    <script src="<?php echo base_url();?>js/my_upload.js"></script>
+    <script src="<?php echo base_url();?>js/ajaxfileupload.js"></script>
   </head>

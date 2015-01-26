@@ -157,3 +157,167 @@ function check_database($password)
 
 Ngoài ra còn các Libraries cho việc chứng thực như 
 [ion_auth](http://benedmunds.com/ion_auth/)
+
+
+
+
+## Rewrite url trong CI
+
+###### URI Segments
+
+Ví dụ trong ứng dụng này của tôi (theo mô hình MVC) có đường dẫn như sau `192.168.1.31/CURD_codeigniter/users/index`
+thì trong đó `users` là controller được gọi đến và `index` là action được gọi
+- Thông thường mặc định uri sẽ là `192.168.1.31/CURD_codeigniter/index.php/users/index` và để xóa `index.php` trong mỗi đường dẫn làm như sau:
+ Nếu trong thư mục `root` của bạn chưa có file `.htaccess` thì create một phải mới với tên đó và thêm vào đoạn code sau để loại bỏ `index.php` trong mỗi đường dẫn mặc định
+
+```
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.php/$0 [PT,L]
+```
+ - Ngoài ra cũng có thể custom đường dẫn theo ý muốn của mình trông thân thiện hơn, giả sử tôi thay `192.168.1.31/CURD_codeigniter/users/index` này bằng một uri khác như `192.168.1.31/CURD_codeigniter/danh-sach-nguoi-dung` chẳng hạn
+ với đoạn code sau:
+
+Trong file `routes.php`
+
+```
+$route['^danh-sach-nguoi-dung$'] = "users/index";
+```
+
+Trong đó `^danh-sach-nguoi-dung$` là một regrex bắt đầu được match tương ứng.
+hay trong một trường hợp khác tôi có các trang sản phẩm và tôi không muốn sử dụng các uri mặc định:
+ban đầu các trang product của tôi sẽ có dạng sau `/products/index/1` trong đó một là trang
+và với đoạn code như sau:
+
+Trong file `routes.php`
+
+```
+$route['^san-pham(/trang-([1-9]+))?$'] = "products/index/$1";
+```
+
+Tôi đã thay thế nó bằng một uri thân thiện  như `192.168.1.31/CURD_codeigniter/san-pham/trang-1` 
+Việc sử dụng friendly url trong codeigniter khá đơn giản chỉ việc cấu hình trong routes có một điều quan trọng đó là bạn phải biết sử dụng `regrex`.
+
+
+## Upload files trong codeigniter
+- Công cụ sử dụng để upload trong proj này là `AjaxFileUpload` 
+- Tạo một thư mục để lưu trữ files khi upload lên trong thư mục root của bạn `files` chẳng hạn và nhớ set quyển read write cho nó. 
+
+###### Tạo một model 
+
+Trước tiên tạo một model để lưu những file sẽ được upload lên 
+Trong proj này là `mfiles.php`
+
+```
+<?php
+class Mfiles extends CI_Model {
+  public function insert_file($filename, $title)
+  {
+    $data = array(
+      'filename'      => $filename,
+      'title'         => $title
+    );
+    $this->db->insert('files', $data);
+    return $this->db->insert_id();
+  }
+  public function get_files()
+  {
+    return $this->db->select()
+          ->from('files')
+          ->get()
+          ->result();
+  }
+}
+```
+
+Và tất nhiên bạn cũng phải tạo một table có 2 trường là `filename` và `title`. `filename` sẽ lưu trữ tên files sau khi up lên và được mã hóa bởi thư viện
+
+###### Tạo một controller 
+
+Action xử lý upload chính là hàm sau:
+
+```
+  public function upload_file()
+  {
+    $status = "";
+    $msg = "";
+    $file_name = 'userfile';
+
+    if (empty($_POST['title']))
+    {
+      $status = "error";
+      $msg = "Please enter a title";
+    }
+
+    if ($status != "error")
+    {
+      $config['upload_path'] = './files/';
+      $config['allowed_types'] = 'gif|jpg|png|doc|txt';
+      $config['encrypt_name'] = TRUE;
+
+      $this->load->library('upload', $config);
+
+      if (!$this->upload->do_upload($file_name))
+      {
+        $status = 'error';
+        $msg = $this->upload->display_errors('', '');
+      }
+      else
+      {
+        $data = $this->upload->data();
+        $file_id = $this->mfiles->insert_file($data['file_name'], $_POST['title']);
+        if($file_id)
+        {
+          $status = "success";
+          $msg = "File successfully uploaded";
+        }
+        else
+        {
+          unlink($data['full_path']);
+          $status = "error";
+          $msg = "Please try again.";
+        }
+      }
+      @unlink($_FILES[$file_name]);
+    }
+    echo json_encode(array('status' => $status, 'msg' => $msg));
+  }
+
+```
+
+Action sẽ kiểm tra xem đường dẫn files và files name có hợp lệ hay không, nếu thành công sẽ lưu lại trong db với name và title đồng thời upload lên thư mục files 
+Trong đó:
+
+```
+  $config['upload_path'] = './files/';
+```
+
+Thư mục chứa files được upload 
+
+```
+$config['allowed_types'] = 'gif|jpg|png|doc|txt';
+```
+
+Kiểu files sẽ cho phép upload ngoài `gif|jpg|png|doc|txt` thì những kiểu khác là không hợp lệ
+      
+```
+$config['encrypt_name'] = TRUE;
+```
+
+Tên files sẽ được mã hóa và lưu lại trong db
+
+
+## Tạo form 
+
+Tạo ra một form và  add thư viện cần thiết cho việc upload
+
+```
+    <script src="<?php echo base_url();?>js/jquery.min.js"></script>
+    <script src="<?php echo base_url();?>js/my_upload.js"></script>
+    <script src="<?php echo base_url();?>js/ajaxfileupload.js"></script>
+```
+
+## Upload files
+
+Việc upload files thông qua ajax xem file `/js/my_upload.js` với controller là `upload` và action là `upload_files`.

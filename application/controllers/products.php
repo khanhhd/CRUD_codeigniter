@@ -25,13 +25,15 @@ class Products extends CI_Controller {
     // $this->load->view("product_index", $data);
 
 
-    $config['base_url']   = base_url(). "index.php/products/index";
+    $config['base_url']   = base_url(). "products/index";
     $config['total_rows'] = $this->Mproduct->count_all();
     $config['per_page']   = 4;
-    $start = $this->uri->segment(3);
+    $start = $this->uri->segment(2);
+    $bb = str_split($start, 6);
+    $realStart = $bb[1];
     $this->load->library("pagination",$config);
     $data['pagination'] = $this->pagination->create_links();
-    $data['info'] = $this->Mproduct->listall($config['per_page'],$start);
+    $data['info'] = $this->Mproduct->listall($config['per_page'],$realStart);
 
     if($this->input->post("ajax")){
         $this->load->view("product_paginate",$data);

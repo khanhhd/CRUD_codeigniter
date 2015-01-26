@@ -39,8 +39,11 @@
 */
 
 // $route['default_controller'] = "welcome";
+
 $route['404_override'] = '';
 $route['default_controller'] = "login";
+$route['^danh-sach-nguoi-dung$'] = "users/index";
+$route['^san-pham(/trang-([1-9]+))?$'] = "products/index/$1";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

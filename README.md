@@ -185,7 +185,7 @@ Trong file `routes.php`
 $route['^danh-sach-nguoi-dung$'] = "users/index";
 ```
 
-Trong đó `^danh-sach-nguoi-dung$` là một regrex bắt đầu được match tương ứng.
+Trong đó `^danh-sach-nguoi-dung$` là một regrex được match tương ứng.
 hay trong một trường hợp khác tôi có các trang sản phẩm và tôi không muốn sử dụng các uri mặc định:
 ban đầu các trang product của tôi sẽ có dạng sau `/products/index/1` trong đó một là trang
 và với đoạn code như sau:
